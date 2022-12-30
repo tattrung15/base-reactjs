@@ -13,7 +13,12 @@ import {
   nullSafetyJSONStringify,
 } from "@core/helpers/helpers";
 import StorageService from "../storage";
-import { HttpOptions, HttpMethod } from "./http.type";
+import {
+  HttpOptions,
+  HttpMethod,
+  RequestContentType,
+  ProgressOptions,
+} from "./http.type";
 import { ACCESS_TOKEN_KEY } from "@app/constants";
 import { Environment } from "@environments/environment";
 
@@ -45,10 +50,34 @@ class _HttpService {
     return this.request(uri, HttpMethod.DELETE, options);
   }
 
+  public requestUpload<T>(
+    uri: string,
+    method = HttpMethod.POST,
+    progressHandler: (ajaxResponse: AjaxResponse<any>) => void,
+    options?: HttpOptions
+  ): Observable<T> {
+    const headers = {
+      ...options?.headers,
+      "Content-Type": "application/octet-stream",
+    };
+
+    const newOptions: HttpOptions = {
+      ...options,
+      headers,
+      requestContentType: RequestContentType.BINARY_STREAM,
+    };
+
+    return this.request(uri, method, newOptions, {
+      includeUploadProgress: true,
+      progressHandler,
+    });
+  }
+
   private request<T>(
     uri: string,
     method: string,
-    options?: HttpOptions
+    options?: HttpOptions,
+    progressOptions?: ProgressOptions
   ): Observable<T> {
     const token = this.getAccessToken();
     let url = this.resolveUri(uri);
@@ -57,25 +86,40 @@ class _HttpService {
       url = url + "?" + this.generateHttpParams(options?.queryParams);
     }
 
-    const body = options?.multipart
-      ? this.buildFormData(options?.body)
-      : nullSafetyJSONStringify(this.buildBodyData(options?.body));
+    let body: any = nullSafetyJSONStringify(this.buildBodyData(options?.body));
+
+    if (options?.requestContentType) {
+      switch (options?.requestContentType) {
+        case RequestContentType.MULTIPART:
+          body = this.buildFormData(options?.body);
+          break;
+        case RequestContentType.BINARY_STREAM:
+          body = options.body;
+          break;
+      }
+    }
 
     this.isRequesting$.next(true);
 
     return ajax({
       url,
       method,
-      body: body,
+      body,
       headers: {
-        ...(options?.multipart
+        ...(options?.requestContentType === RequestContentType.MULTIPART
           ? { Accept: "application/json" }
           : this._commonHeader),
         Authorization: token ? `Bearer ${token}` : "",
         ...options?.headers,
       },
+      includeUploadProgress: progressOptions?.includeUploadProgress,
     }).pipe(
-      map((ajaxResponse) => this.handleResponse<T>(ajaxResponse)),
+      map((ajaxResponse) => {
+        progressOptions?.progressHandler &&
+          progressOptions?.progressHandler(ajaxResponse);
+
+        return this.handleResponse<T>(ajaxResponse);
+      }),
       catchError((error) => {
         this.onError$.next(error);
 
@@ -95,7 +139,7 @@ class _HttpService {
     const formData = new FormData();
 
     for (const key in data) {
-      if (data[key] !== null) {
+      if (!data[key]) {
         if (data[key] instanceof File) {
           formData.append(key, data[key], data[key].name);
         } else if (Array.isArray(data[key])) {

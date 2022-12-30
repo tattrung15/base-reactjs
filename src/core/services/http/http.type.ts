@@ -1,3 +1,5 @@
+import { AjaxResponse } from "rxjs/ajax";
+
 export enum HttpMethod {
   GET = "GET",
   POST = "POST",
@@ -6,11 +8,16 @@ export enum HttpMethod {
   DELETE = "DELETE",
 }
 
+export enum RequestContentType {
+  MULTIPART = 1,
+  BINARY_STREAM = 2,
+}
+
 export interface HttpOptions {
   queryParams?: Record<string, ParamTypes>;
-  body?: Record<string, unknown> | FormData;
+  body?: Record<string, unknown> | FormData | File;
   headers?: Record<string, unknown>;
-  multipart?: boolean;
+  requestContentType?: RequestContentType;
 }
 
 type ParamTypes =
@@ -54,4 +61,10 @@ export interface CoreResponse {
   status: number;
   message: string;
   result?: ResponseResult | DataSet;
+}
+
+export interface ProgressOptions {
+  includeUploadProgress: boolean;
+
+  progressHandler: (ajaxResponse: AjaxResponse<any>) => void;
 }
