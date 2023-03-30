@@ -52,6 +52,13 @@ interface InputProps extends FormControlChildProps {
    */
   readOnly?: boolean;
 
+  inputIcon?: string;
+
+  /**
+   * Default: ''
+   */
+  inputIconClassName?: string;
+
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 
   onBlur?: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -76,6 +83,8 @@ function Input({
   defaultStatus = undefined,
   readOnly = false,
   errorClassName = "",
+  inputIcon,
+  inputIconClassName = "",
   onChange = () => {},
   onBlur,
   fmOnChange,
@@ -126,11 +135,7 @@ function Input({
         className={`box-border max-w-xs mt-2 w-full ${className}`}
         style={{ width }}
       >
-        <div
-          className={clsx("w-full flex", {
-            relative: type === "password",
-          })}
-        >
+        <div className="w-full flex relative">
           <input
             id={id}
             className={clsx(
@@ -139,6 +144,7 @@ function Input({
                 "bg-[#dadada]": disabled,
                 "border border-solid border-[#FF0000] !bg-[#fce4ec]": isError,
                 "pr-8": type === "password",
+                "pl-[37px]": !!inputIcon,
               }
             )}
             type={isShowPassword ? "text" : type}
@@ -152,6 +158,13 @@ function Input({
             onFocus={onFocus}
             readOnly={readOnly}
           />
+          {inputIcon && (
+            <img
+              className={`absolute w-4 h-4 left-[11px] top-[15px] ${inputIconClassName}`}
+              src={inputIcon}
+              alt=""
+            />
+          )}
           {type === "password" && (
             <div
               className="absolute right-0 pr-2 h-full flex items-center cursor-pointer"

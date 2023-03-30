@@ -8,26 +8,30 @@ export default function ToastContainer() {
   const [position, setPosition] = useState<string>("");
 
   useEffect(() => {
+    const toastTimers: NodeJS.Timeout[] = [];
+
     toast$.subscribe((data) => {
       setToast(data.toasts);
       setPosition(data.position);
-    });
-  });
 
-  const handleRemoveToast = useCallback((id: number) => {
-    removeToast(id);
-  }, []);
-
-  useEffect(() => {
-    toast$.subscribe((data) => {
       if (data.toasts.length) {
         data.toasts.forEach((toast) => {
-          setTimeout(() => {
+          const timer = setTimeout(() => {
             handleRemoveToast(toast.id);
           }, 3000);
+
+          toastTimers.push(timer);
         });
       }
     });
+
+    return () => {
+      toastTimers.forEach((timer) => clearTimeout(timer));
+    };
+  }, []);
+
+  const handleRemoveToast = useCallback((id: number) => {
+    removeToast(id);
   }, []);
 
   return (
@@ -52,7 +56,7 @@ export default function ToastContainer() {
             }
           )}
         >
-          <div className="ml-2 text-white break-words w-[270px] pr-2">
+          <div className="ml-2 text-white break-words w-[270px] pr-2 py-2">
             {toast.text}
           </div>
 
