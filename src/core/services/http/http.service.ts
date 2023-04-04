@@ -121,6 +121,7 @@ class _HttpService {
         return this.handleResponse<T>(ajaxResponse);
       }),
       catchError((error) => {
+        this.isRequesting$.next(false);
         this.onError$.next(error);
 
         return throwError(() => error);
