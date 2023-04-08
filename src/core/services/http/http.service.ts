@@ -140,7 +140,7 @@ class _HttpService {
     const formData = new FormData();
 
     for (const key in data) {
-      if (!data[key]) {
+      if (data[key]) {
         if (data[key] instanceof File) {
           formData.append(key, data[key], data[key].name);
         } else if (Array.isArray(data[key])) {
