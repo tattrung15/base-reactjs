@@ -43,8 +43,8 @@ export interface ResponsePagination {
 export type PaginateSearchValue = string | number | boolean | any[];
 
 export interface PaginationOption {
-  page: number;
-  perPage: number;
+  page?: number;
+  perPage?: number;
   total?: number;
   equal?: { [key: string]: PaginateSearchValue };
   like?: { [key: string]: PaginateSearchValue };

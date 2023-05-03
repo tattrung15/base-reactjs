@@ -2,6 +2,7 @@ import {
   catchError,
   finalize,
   map,
+  NEVER,
   Observable,
   Subject,
   throwError,
@@ -21,6 +22,8 @@ import {
 } from "./http.type";
 import { ACCESS_TOKEN_KEY } from "@app/constants";
 import { Environment } from "@environments/environment";
+import { addToast } from "@app/components/toast/toast.service";
+import { SystemMessage } from "@app/constants/message.const";
 
 class _HttpService {
   public isRequesting$ = new Subject<boolean>();
@@ -121,8 +124,17 @@ class _HttpService {
         return this.handleResponse<T>(ajaxResponse);
       }),
       catchError((error) => {
-        this.isRequesting$.next(false);
         this.onError$.next(error);
+
+        const message = error?.response?.message ?? SystemMessage.UNKNOWN_ERROR;
+
+        addToast({ text: message, status: "inValid" });
+
+        if (process.env.NODE_ENV === "development") {
+          this.isRequesting$.next(false);
+
+          return NEVER;
+        }
 
         return throwError(() => error);
       }),
@@ -165,7 +177,7 @@ class _HttpService {
       return uri;
     }
 
-    return `${Environment.REACT_APP_BASE_API}${uri}`;
+    return `${Environment.BASE_API}${uri}`;
   }
 
   private generateHttpParams(params: object) {
