@@ -7,7 +7,7 @@ class _SocketService {
   private socket!: Socket;
 
   public connect(options?: Partial<ManagerOptions & SocketOptions>) {
-    const socketUrl = Environment.REACT_APP_SOCKET_URL as string;
+    const socketUrl = Environment.SOCKET_URL as string;
 
     const newOptions: Partial<ManagerOptions & SocketOptions> = {
       ...options,

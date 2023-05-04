@@ -1,4 +1,4 @@
-import { removeIconThin } from "@assets/images";
+import { Images } from "@assets/images";
 import useOnClickOutside from "@core/hooks/use-on-click-outside.hook";
 import { useRef } from "react";
 import { ModalProps } from "./modal.type";
@@ -22,23 +22,20 @@ function ModalDialogTemplate({ props }: { props: ModalProps }) {
   });
 
   return (
-    <div
-      className="fixed top-0 left-0 z-[90] w-full h-full flex justify-center items-center"
-      style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-    >
-      <div className="relative z-[80] bg-white text" ref={contentRef}>
+    <div className="fixed top-0 left-0 z-[90] w-full h-full flex justify-center items-center bg-[#A1A2A8B2]">
+      <div className="relative z-[80] bg-white !rounded-lg" ref={contentRef}>
         {children}
 
         {buttonCancelInChildren && (
           <div
-            className="absolute top-[-60px] right-0 cursor-pointer text-white text-6xl"
+            className="absolute top-6 right-6 z-[100] cursor-pointer text-white text-6xl"
             onClick={handleCancel}
           >
             <img
-              src={removeIconThin.default}
+              src={Images.RemoveIconThin.default}
               alt="remove icon"
-              height={16}
-              width={16}
+              height={20}
+              width={20}
             />
           </div>
         )}
@@ -50,7 +47,7 @@ function ModalDialogTemplate({ props }: { props: ModalProps }) {
           onClick={handleCancel}
         >
           <img
-            src={removeIconThin.default}
+            src={Images.RemoveIconThin.default}
             alt="remove icon"
             height={16}
             width={16}

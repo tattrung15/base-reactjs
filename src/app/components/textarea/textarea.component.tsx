@@ -88,33 +88,31 @@ function TextArea({
   const isError = _status === "inValid" || _status === "warn";
 
   return (
-    <>
-      <div className={`${className}`} style={{ width, height }}>
-        <textarea
-          id={id}
-          name={name}
-          placeholder={placeholder}
-          className={clsx(
-            `w-full min-h-[80px] h-full box-border mt-2 border border-solid border-[#bdbdbd] pl-2 py-2 rounded outline-none
+    <div className={`${className}`} style={{ width, height }}>
+      <textarea
+        id={id}
+        name={name}
+        placeholder={placeholder}
+        className={clsx(
+          `w-full min-h-[80px] h-full box-border mt-2 border border-solid border-[#bdbdbd] pl-2 py-2 rounded outline-none
             ${textAreaClassName}`,
-            {
-              "border border-solid border-[#FF0000] !bg-[#fce4ec]": isError,
-            }
-          )}
-          value={txaValue}
-          disabled={disabled}
-          onBlur={handleBlur}
-          onChange={handleChange}
-        />
-        {isError && (
-          <div className={`flex text-[#FF0000] ${errorClassName}`}>
-            {formik &&
-              formik.getFieldMeta(name!).error &&
-              formik.getFieldMeta(name!).error}
-          </div>
+          {
+            "border border-solid border-[#FF0000] !bg-[#fce4ec]": isError,
+          }
         )}
-      </div>
-    </>
+        value={txaValue}
+        disabled={disabled}
+        onBlur={handleBlur}
+        onChange={handleChange}
+      />
+      {isError && (
+        <div className={`flex text-[#FF0000] ${errorClassName}`}>
+          {formik &&
+            formik.getFieldMeta(name!).error &&
+            formik.getFieldMeta(name!).error}
+        </div>
+      )}
+    </div>
   );
 }
 

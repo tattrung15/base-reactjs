@@ -1,3 +1,4 @@
+import { Images } from "@assets/images";
 import clsx from "clsx";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { FormControlChildProps } from "../form-control";
@@ -132,17 +133,17 @@ function Input({
   return (
     <>
       <div
-        className={`box-border max-w-xs mt-2 w-full ${className}`}
+        className={`box-border max-w-xs w-full ${className}`}
         style={{ width }}
       >
         <div className="w-full flex relative">
           <input
             id={id}
             className={clsx(
-              `w-full outline-none px-4 py-1 h-[36px] leading-[36px] align-baseline border border-solid border-[#bdbdbd] rounded ${inputClassName}`,
+              `w-full outline-none px-4 py-1 h-[36px] leading-[36px] align-baseline border border-solid border-[#3A466480] border-opacity-[0.5] rounded-lg ${inputClassName}`,
               {
-                "bg-[#dadada]": disabled,
-                "border border-solid border-[#FF0000] !bg-[#fce4ec]": isError,
+                "bg-[#A1A2A880]": disabled,
+                "border border-solid border-[#D6000080]": isError,
                 "pr-8": type === "password",
                 "pl-[37px]": !!inputIcon,
               }
@@ -167,13 +168,13 @@ function Input({
           )}
           {type === "password" && (
             <div
-              className="absolute right-0 pr-2 h-full flex items-center cursor-pointer"
+              className="absolute right-0 pr-[10px] h-full flex items-center cursor-pointer"
               onClick={() => setIsShowPassword(!isShowPassword)}
             >
               {isShowPassword ? (
-                <i className="fa fa-eye-slash"></i>
+                <img src={Images.EyeSlashIcon.default} alt="" />
               ) : (
-                <i className="fa fa-eye"></i>
+                <img src={Images.EyeIcon.default} alt="" />
               )}
             </div>
           )}
@@ -181,7 +182,7 @@ function Input({
       </div>
 
       {isError && (
-        <div className={`flex text-[#FF0000] ${errorClassName}`}>
+        <div className={`flex text-[#D60000B2] ${errorClassName}`}>
           {formik &&
             formik.getFieldMeta(name!).error &&
             formik.getFieldMeta(name!).error}
