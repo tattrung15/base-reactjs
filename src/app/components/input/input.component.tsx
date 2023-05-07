@@ -1,6 +1,12 @@
 import { Images } from "@assets/images";
 import clsx from "clsx";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { FormControlChildProps } from "../form-control";
 
 interface InputProps extends FormControlChildProps {
@@ -55,10 +61,17 @@ interface InputProps extends FormControlChildProps {
 
   inputIcon?: string;
 
+  inputElement?: ReactElement;
+
   /**
    * Default: ''
    */
   inputIconClassName?: string;
+
+  /**
+   * Default: ''
+   */
+  inputElementClassName?: string;
 
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 
@@ -86,6 +99,8 @@ function Input({
   errorClassName = "",
   inputIcon,
   inputIconClassName = "",
+  inputElement,
+  inputElementClassName = "",
   onChange = () => {},
   onBlur,
   fmOnChange,
@@ -145,7 +160,7 @@ function Input({
                 "bg-[#A1A2A880]": disabled,
                 "border border-solid border-[#D6000080]": isError,
                 "pr-8": type === "password",
-                "pl-[37px]": !!inputIcon,
+                "pl-[37px]": !!inputIcon || !!inputElement,
               }
             )}
             type={isShowPassword ? "text" : type}
@@ -165,6 +180,13 @@ function Input({
               src={inputIcon}
               alt=""
             />
+          )}
+          {inputElement && (
+            <div
+              className={`absolute w-4 h-4 left-3 top-2 ${inputElementClassName}`}
+            >
+              {inputElement}
+            </div>
           )}
           {type === "password" && (
             <div
