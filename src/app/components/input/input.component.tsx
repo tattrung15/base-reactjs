@@ -201,15 +201,14 @@ function Input({
             </div>
           )}
         </div>
+        {isError && (
+          <div className={`flex text-[#D60000B2] ${errorClassName}`}>
+            {formik &&
+              formik.getFieldMeta(name!).error &&
+              formik.getFieldMeta(name!).error}
+          </div>
+        )}
       </div>
-
-      {isError && (
-        <div className={`flex text-[#D60000B2] ${errorClassName}`}>
-          {formik &&
-            formik.getFieldMeta(name!).error &&
-            formik.getFieldMeta(name!).error}
-        </div>
-      )}
     </>
   );
 }
