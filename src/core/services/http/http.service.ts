@@ -76,6 +76,21 @@ class _HttpService {
     });
   }
 
+  public requestDownload(uri: string, options?: HttpOptions) {
+    const token = this.getAccessToken();
+    const url = this.resolveUri(uri);
+
+    return ajax({
+      url,
+      method: HttpMethod.GET,
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+        ...options?.headers,
+      },
+      responseType: "blob" as "json",
+    });
+  }
+
   private request<T>(
     uri: string,
     method: string,
