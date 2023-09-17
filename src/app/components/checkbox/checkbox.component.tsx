@@ -1,9 +1,15 @@
 import clsx from "clsx";
-import { ChangeEvent, forwardRef, useCallback, useState } from "react";
+import {
+  ChangeEvent,
+  ReactNode,
+  forwardRef,
+  useCallback,
+  useState,
+} from "react";
 import { ControlStaticType, FormControlChildProps } from "../form-control";
 
 export interface CheckboxProps extends FormControlChildProps {
-  label?: string;
+  label?: ReactNode;
 
   value?: string;
 
@@ -19,6 +25,8 @@ export interface CheckboxProps extends FormControlChildProps {
   labelClassName?: string;
 
   checkboxClassName?: string;
+
+  errorClassName?: string;
 
   isMultiLanguage?: boolean;
 
@@ -40,6 +48,7 @@ const CheckboxComponent = (props: CheckboxProps, ref: any) => {
     className = "",
     labelClassName = "",
     checkboxClassName = "",
+    errorClassName = "",
     status,
     onChange,
     onBlur,
@@ -85,17 +94,13 @@ const CheckboxComponent = (props: CheckboxProps, ref: any) => {
           onChange={handleChange}
           onBlur={handleBlur}
         />
-
         <div className={clsx(`mt-[2px] ${labelClassName}`)}>{label}</div>
       </label>
-
       {!!status && (
-        <div className="flex items-center mt-1">
-          <div className="text-[#c2185b] font-medium">
-            {formik &&
-              formik.getFieldMeta(name!).error &&
-              formik.getFieldMeta(name!).error}
-          </div>
+        <div className={`flex text-[#D60000B2] ${errorClassName}`}>
+          {formik &&
+            formik.getFieldMeta(name!).error &&
+            formik.getFieldMeta(name!).error}
         </div>
       )}
     </div>

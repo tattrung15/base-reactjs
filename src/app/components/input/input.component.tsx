@@ -18,7 +18,7 @@ interface InputProps extends FormControlChildProps {
   /**
    * Default: 'text'
    */
-  type?: "text" | "password" | "number";
+  type?: "text" | "password" | "number" | "date";
 
   /**
    * Default: ''
